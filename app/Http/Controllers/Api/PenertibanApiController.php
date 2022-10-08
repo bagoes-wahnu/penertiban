@@ -17,7 +17,7 @@ class PenertibanApiController extends Controller
     public function json(Request $request){
         // $data = Skrk::select('*');
         if ($request->ajax()) {
-            $data = Penertiban::select('*');
+            $data = Penertiban::select('*')->limit(10000);
             // dd($data);
             return Datatables::of($data)
                     ->addIndexColumn()
@@ -64,17 +64,28 @@ class PenertibanApiController extends Controller
         //     'jenis_id' => $request->jenis_id,
         //     'tahapan_id' => $request->tahapan_id,
         // ]);
-        if ($request->hasFile('foto')) {
-            if (Storage::exists('public/foto/'.$request->emp_foto)) {
-                Storage::delete('public/foto/'.$request->emp_foto);
+        if ($request->hasFile('foto_dokumen')) {
+            if (Storage::exists('public/foto_dokumen/'.$request->emp_foto_dokumen)) {
+                Storage::delete('public/foto_dokumen/'.$request->emp_foto_dokumen);
             }
-            $image = $request->file('foto');
+            $image = $request->file('foto_dokumen');
             $fileName = date('YmdHis') . "." . $image->getClientOriginalExtension();
-            $image->storeAs('public/foto', $fileName);
+            $image->storeAs('public/foto_dokumen', $fileName);
         }else {
-            $fileName = $request->emp_foto;
+            $fileName = $request->emp_foto_dokumen;
+        }
+        if ($request->hasFile('foto_lapangan')) {
+            if (Storage::exists('public/foto_lapangan/'.$request->emp_foto_lapangan)) {
+                Storage::delete('public/foto_lapangan/'.$request->emp_foto_lapangan);
+            }
+            $image2 = $request->file('foto_lapangan');
+            $fileName2 = date('YmdHis') . "." . $image2->getClientOriginalExtension();
+            $image2->storeAs('public/foto_lapangan', $fileName2);
+        }else {
+            $fileName2 = $request->emp_foto_lapangan;
         }
         // dd($request->all());
+        // dd($request->id);
         if (Penertiban::where('id', $request->id)->exists()) {
             $penertiban = Penertiban::findOrFail($request->id);
             $penertiban->no_upt_imb = $request->no_upt_imb;
@@ -100,7 +111,8 @@ class PenertibanApiController extends Controller
             $penertiban->keterangan = $request->keterangan;
             $penertiban->latitude = $request->latitude;
             $penertiban->longitude = $request->longitude;
-            $penertiban->foto = $fileName;
+            $penertiban->foto_dokumen = $fileName;
+            $penertiban->foto_lapangan = $fileName2;
             $penertiban->save();
         }else {
             Penertiban::create([
@@ -128,7 +140,8 @@ class PenertibanApiController extends Controller
                 'keterangan' => $request->keterangan,
                 'latitude' => $request->latitude,
                 'longitude' => $request->longitude,
-                'foto' => $fileName,
+                'foto_dokumen' => $request->$fileName,
+                'foto_lapangan' => $request->$fileName2,
             ]);
         }   
 
@@ -139,5 +152,38 @@ class PenertibanApiController extends Controller
         Penertiban::find($id)->delete();
       
         return response()->json(['success'=>'Data Penertiban deleted successfully.']);
+    }
+    public function search_json(Request $request){
+        // dd($request->all());
+        if ($request->ajax()) {
+            // dd($request->kolom);
+            $data = Penertiban::select('*')->limit(10000);
+            if ($request->kolom != '' && $request->nilai != '') {
+                // dd($data->where("'$request->kolom'" == 1));
+                // $data = $data->where($request->kolom, $request->nilai);
+                $data = $data->where($request->kolom, 'LIKE', '%' . $request->nilai . '%');
+                $count = $data->count();
+                // dd($count);
+            }
+            return Datatables::of($data)
+                    ->addIndexColumn()
+                    ->addColumn('action', function($data){
+                        // $gid = $data->gid;
+                        // dd($gid);
+                        $view = route('show', $data);
+                        $btn = '<input type="hidden" name="gid" id="gid" value="'.$data->gid.'">';
+                        $btn = $btn . '<a href="'.$view.'" target="_blank" onclick="show_json('.$data->gid.')" data-gid="'.$data->gid.'" class="edit btn btn-info btn-sm mr-2 mb-2">
+                        View
+                        </a>';
+                        $btn = $btn . '<a href="javascript:void(0)" onclick="edit_json('.$data->gid.')" data-gid="'.$data->gid.'" data-toggle="modal" data-target="#modal-lg" class="edit btn btn-primary btn-sm mr-2 mb-2">
+                        Update
+                        </a>';
+                        return $btn;
+                    })
+                    ->rawColumns(['action'])
+                    ->make(true);
+        }
+        // return view('home2');
+        return response()->json(['success'=>'Data Ditemukan.']);
     }
 }

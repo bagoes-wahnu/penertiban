@@ -20,6 +20,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::get('/penertiban/json', [PenertibanApiController::class,'json'])->name('penertiban.json');
+Route::get('/penertiban/search_json', [PenertibanApiController::class,'search_json'])->name('penertiban.search.json');
 Route::get('/penertiban/show_json/{gid}', [PenertibanApiController::class,'show_json'])->name('penertiban.show.json');
 Route::post('/penertiban/store_json', [PenertibanApiController::class,'store_json'])->name('penertiban.store.json');
 Route::delete('/penertiban/delete_json/{gid}', [PenertibanApiController::class,'delete_json'])->name('penertiban.delete.json');
