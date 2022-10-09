@@ -16,6 +16,7 @@
   <link rel="stylesheet" href="{{asset("plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css")}}">
   <link rel="stylesheet" href="{{asset("plugins/toastr/toastr.min.css")}}">
   <link rel="stylesheet" href="{{asset("dist/css/adminlte.min.css")}}">
+  <link rel="stylesheet" href="{{asset('plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css')}}">
 
   <!-- leaflet css  -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
@@ -644,7 +645,7 @@ crossorigin=""></script>
         </div>
       `
     )
-    var $tahapan1 = $('#tahapan1').hide();var $tahapan2 = $('#tahapan2').hide();var $tahapan2 = $('#tahapan3').hide();var $tahapan2 = $('#tahapan4').hide();var $tahapan2 = $('#tahapan5').hide();var $tahapan2 = $('#tahapan6').hide();var $tahapan2 = $('#tahapan7').hide();var $tahapan2 = $('#tahapan8').hide();var $tahapan2 = $('#tahapan9').hide();
+    var $tahapan1 = $('#tahapan1').hide();var $tahapan2 = $('#tahapan2').hide();var $tahapan3 = $('#tahapan3').hide();var $tahapan4 = $('#tahapan4').hide();var $tahapan5 = $('#tahapan5').hide();var $tahapan6 = $('#tahapan6').hide();var $tahapan7 = $('#tahapan7').hide();var $tahapan8 = $('#tahapan8').hide();var $tahapan9 = $('#tahapan9').hide();
     // var $groundSprayTr = $('#id_B').closest('tr').hide();
     $('#jenis_create').change(function() {
         var selectedValue = $(this).val();
