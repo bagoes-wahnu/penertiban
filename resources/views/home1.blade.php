@@ -181,6 +181,7 @@
                       </div>
                     </div>
                     </form>
+                    <a type="button" href="{{asset('/create')}}" class="btn btn-success">Tambah data</a>
                   </div>
                 </div>
               </div>
